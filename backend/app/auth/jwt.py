@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from ..database import SessionLocal
 
-# Загружаем переменные окружения
 load_dotenv()
 
 SECRET_KEY = os.getenv("JWT_SECRET", "your_very_secure_secret_key")
@@ -39,7 +38,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     login = payload.get("sub")
     if not login:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен")
-    from ..crud import get_student_by_login  # Импортируем здесь, чтобы избежать циклических зависимостей
+    from ..crud import get_student_by_login
     user = get_student_by_login(db, login)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Пользователь не найден")
